@@ -1,66 +1,26 @@
-/** @jsxImportSource @emotion/react */
-import { Button, ChakraProvider, SimpleGrid } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  ChakraProvider,
+  Flex,
+  SimpleGrid,
+} from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 import theme from "../theme";
-import TimeBlock from "./TimeBlock";
-import { css } from "@emotion/react";
-import { useState } from "react";
-import CreateTimeBlock from "./TimeBlock/CreateTimeBlock";
-import { TimeBlockInterface } from "./types";
-
-const styles = {
-  container: css({
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    height: "100%",
-    gap: "24px",
-  }),
-  timeblockContainer: css({
-    display: "grid",
-  }),
-};
-
-// Function to calculate start time
-function calculateStartTimes(
-  timeBlocks: TimeBlockInterface[],
-  initialTime: Date
-) {
-  let currentTime = new Date(initialTime);
-
-  return timeBlocks.map((timeBlock) => {
-    // Subtract hours and minutes from the currentTime for the current block
-    currentTime = new Date(
-      currentTime.getTime() -
-        (timeBlock.hours * 60 * 60 * 1000 + timeBlock.minutes * 60 * 1000)
-    );
-
-    // Format the time for display purposes
-    const formattedTime = currentTime.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    return {
-      ...timeBlock,
-      startTime: formattedTime,
-    };
-  });
-}
+import { calculateStartTimes } from "./utils/helper";
+import FloatingAddButton from "./Components/FloatingAddButton";
+import TimeBlock from "./Components/TimeBlock";
+import CreateTimeBlock from "./Components/TimeBlock/CreateTimeBlock";
+import TimeInput from "./Components/TimeInput";
 
 function App() {
-  const today = new Date();
-  const initialTime = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-    11,
-    0,
-    0
-  );
+  const [endTime, setEndTime] = useState("11:00");
+  const [activeCreateId, setActiveCreateId] = useState<number | null>(null);
 
   const [timeBlocks, setTimeBlocks] = useState([
     {
+      id: Date.now(),
       title: "Shower",
       description: "Do the shower",
       hours: 0,
@@ -68,10 +28,8 @@ function App() {
     },
   ]);
 
-  const [showCreateTimeBlock, setShowCreateTimeBlock] = useState(false);
-
-  const handleAddTimeBlock = () => {
-    setShowCreateTimeBlock(true);
+  const handleAddTimeBlock = (createId: number) => {
+    setActiveCreateId(createId);
   };
 
   const handleCreateTimeBlock: React.FormEventHandler<HTMLFormElement> = (
@@ -79,56 +37,106 @@ function App() {
   ) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    console.log(formData.get("title"));
-    setTimeBlocks((prevTimeBlocks) => [
-      ...prevTimeBlocks,
-      {
-        title: formData.get("title"),
-        description: formData.get("description"),
-        hours: formData.get("hours"),
-        minutes: formData.get("minutes"),
-      },
-    ]);
-    setShowCreateTimeBlock(false);
+    const newTimeBlock = {
+      id: Date.now(),
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      hours: formData.get("hours") as unknown as number,
+      minutes: formData.get("minutes") as unknown as number,
+    };
+
+    setTimeBlocks((prevTimeBlocks) => {
+      const newTimeBlocks = [...prevTimeBlocks];
+      const timeBlockToPlaceAfterIndex = prevTimeBlocks.findIndex(
+        (timeBlock) => timeBlock.id === activeCreateId
+      );
+
+      if (timeBlockToPlaceAfterIndex !== -1) {
+        newTimeBlocks.splice(timeBlockToPlaceAfterIndex + 1, 0, newTimeBlock);
+      }
+
+      return newTimeBlocks;
+    });
+
+    setActiveCreateId(null);
   };
 
   const handleCancelCreate = () => {
-    setShowCreateTimeBlock(false);
+    setActiveCreateId(null);
   };
 
-  const test = calculateStartTimes(timeBlocks, initialTime);
-  console.log("test", test);
+  const handleEndTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEndTime(event.target.value);
+  };
+
+  const handleDeleteTimeBlock = (index: number) => {
+    setTimeBlocks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const formattedTimeBlocks = useMemo(
+    () =>
+      calculateStartTimes({
+        timeBlocks,
+        time: endTime,
+      }),
+    [timeBlocks, endTime]
+  );
 
   return (
     <ChakraProvider theme={theme}>
-      <div css={styles.container}>
-        <div>Time to be at the place: {initialTime.toLocaleTimeString()}</div>
-        <SimpleGrid columns={1} spacing={2}>
-          {test.map((timeBlock) => (
-            <TimeBlock
-              key={timeBlock.title}
-              title={timeBlock.title}
-              description={timeBlock.description}
-              minutes={timeBlock.minutes}
-              hours={timeBlock.hours}
-              startTime={timeBlock.startTime}
-            />
+      <Flex
+        width="100%"
+        height="100%"
+        direction="column"
+        alignItems="center"
+        gap={6}
+        paddingTop={4}
+        maxWidth="800px"
+        marginLeft="auto"
+        marginRight="auto"
+      >
+        <Card width="100%">
+          <CardBody display="flex" alignItems="center">
+            <span>Time to be at the place:</span>
+            <TimeInput time={endTime} handleTimeChange={handleEndTimeChange} />
+          </CardBody>
+        </Card>
+        <SimpleGrid columns={1} spacing={2} width="100%">
+          {formattedTimeBlocks.map((timeBlock, index) => (
+            <Flex
+              key={timeBlock.id}
+              gap={4}
+              direction="column"
+              position="relative"
+            >
+              <TimeBlock
+                handleDeleteTimeBlock={() => handleDeleteTimeBlock(index)}
+                {...timeBlock}
+              />
+              {!activeCreateId && timeBlocks.length > 1 && (
+                <FloatingAddButton
+                  handleAddTimeBlock={() => handleAddTimeBlock(timeBlock.id)}
+                />
+              )}
+              {activeCreateId === timeBlock.id && (
+                <form onSubmit={handleCreateTimeBlock}>
+                  <CreateTimeBlock handleCancel={handleCancelCreate} />
+                </form>
+              )}
+            </Flex>
           ))}
-          {/* <TimeBlock
-            title="Shower"
-            description="Taking a shower"
-            timeAllocated="10 mins"
-            startTime={formattedTime}
-          />
-          <TimeBlock title="Eat Food" timeAllocated="10 mins" /> */}
         </SimpleGrid>
-        {showCreateTimeBlock && (
-          <form onSubmit={handleCreateTimeBlock}>
-            <CreateTimeBlock handleCancel={handleCancelCreate} />
-          </form>
+        {!activeCreateId && (
+          <Button
+            colorScheme="green"
+            onClick={() =>
+              handleAddTimeBlock(timeBlocks[timeBlocks.length - 1].id)
+            }
+          >
+            Add TimeBlock
+          </Button>
         )}
-        <Button onClick={handleAddTimeBlock}>Add TimeBlock</Button>
-      </div>
+      </Flex>
     </ChakraProvider>
   );
 }

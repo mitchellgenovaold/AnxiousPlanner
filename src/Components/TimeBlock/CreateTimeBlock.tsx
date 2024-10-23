@@ -52,7 +52,7 @@ const CreateTimeBlock = ({ handleCancel }: CreateTimeBlockProps) => {
           <Button colorScheme="green" type="submit">
             Create
           </Button>
-          <Button colorScheme="red" onClick={handleCancel}>
+          <Button colorScheme="blue" onClick={handleCancel}>
             Cancel
           </Button>
         </ButtonGroup>
