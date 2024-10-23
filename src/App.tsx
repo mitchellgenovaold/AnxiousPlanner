@@ -8,13 +8,20 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import theme from "../theme";
-import { calculateStartTimes } from "./utils/helper";
+import { calculateStartTimes } from "./utils/helpers";
 import FloatingAddButton from "./Components/FloatingAddButton";
 import TimeBlock from "./Components/TimeBlock";
 import CreateTimeBlock from "./Components/TimeBlock/CreateTimeBlock";
 import TimeInput from "./Components/TimeInput";
 import useTimeBlocks from "./hooks/useTimeBlocks";
 import useEndTime from "./hooks/useEndTime";
+import { DndContext } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import SortableItem from "./Components/SortableItem";
+import useDragAndDrop from "./hooks/useDragAndDrop";
 
 function App() {
   const { endTime, handleEndTimeChange } = useEndTime();
@@ -27,7 +34,13 @@ function App() {
     handleCancelCreate,
     handleDeleteTimeBlock,
     getIsActiveTimeBlockCreation,
+    setTimeBlocks,
   } = useTimeBlocks();
+
+  const { handleDragStart, handleDragEnd, handleDragCancel } = useDragAndDrop({
+    items: timeBlocks,
+    setItems: setTimeBlocks,
+  });
 
   const formattedTimeBlocks = useMemo(
     () =>
@@ -37,6 +50,9 @@ function App() {
       }),
     [timeBlocks, endTime]
   );
+
+  const disableDragAndDrop =
+    isCreatingTimeBlock || formattedTimeBlocks.length <= 1;
 
   return (
     <ChakraProvider theme={theme}>
@@ -58,29 +74,40 @@ function App() {
           </CardBody>
         </Card>
         <SimpleGrid columns={1} spacing={2} width="100%">
-          {formattedTimeBlocks.map((timeBlock, index) => (
-            <Flex
-              key={timeBlock.id}
-              gap={4}
-              direction="column"
-              position="relative"
+          <DndContext
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
+          >
+            <SortableContext
+              strategy={verticalListSortingStrategy}
+              items={formattedTimeBlocks}
+              disabled={disableDragAndDrop}
             >
-              <TimeBlock
-                handleDeleteTimeBlock={() => handleDeleteTimeBlock(index)}
-                {...timeBlock}
-              />
-              {!isCreatingTimeBlock && timeBlocks.length > 1 && (
-                <FloatingAddButton
-                  handleAddTimeBlock={() => handleAddTimeBlock(timeBlock.id)}
-                />
-              )}
-              {getIsActiveTimeBlockCreation(timeBlock.id) && (
-                <form onSubmit={handleCreateTimeBlock}>
-                  <CreateTimeBlock handleCancel={handleCancelCreate} />
-                </form>
-              )}
-            </Flex>
-          ))}
+              {formattedTimeBlocks.map((timeBlock, index) => (
+                <SortableItem id={timeBlock.id} key={timeBlock.id}>
+                  <Flex gap={4} direction="column" position="relative">
+                    <TimeBlock
+                      handleDeleteTimeBlock={() => handleDeleteTimeBlock(index)}
+                      {...timeBlock}
+                    />
+                    {!isCreatingTimeBlock && timeBlocks.length > 1 && (
+                      <FloatingAddButton
+                        handleAddTimeBlock={() =>
+                          handleAddTimeBlock(timeBlock.id)
+                        }
+                      />
+                    )}
+                    {getIsActiveTimeBlockCreation(timeBlock.id) && (
+                      <form onSubmit={handleCreateTimeBlock}>
+                        <CreateTimeBlock handleCancel={handleCancelCreate} />
+                      </form>
+                    )}
+                  </Flex>
+                </SortableItem>
+              ))}
+            </SortableContext>
+          </DndContext>
         </SimpleGrid>
         {!isCreatingTimeBlock && (
           <Button

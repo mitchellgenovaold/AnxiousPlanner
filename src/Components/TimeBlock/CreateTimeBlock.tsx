@@ -37,7 +37,7 @@ const CreateTimeBlock = ({ handleCancel }: CreateTimeBlockProps) => {
           <FormControl>
             <FormLabel>Choose duration</FormLabel>
             <HStack spacing="4">
-              <NumberInput name="hours" min={0} max={5}>
+              <NumberInput name="hours" min={0} max={24}>
                 <NumberInputField placeholder="Hours" />
               </NumberInput>
               <NumberInput name="minutes" min={0} max={59}>

@@ -2,6 +2,7 @@ import {
   Box,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Editable,
   EditableInput,
@@ -14,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { TimeBlockInterface } from "../../types";
 import DeleteConfirmationButton from "../DeleteConfirmationButton";
+import DragHandle from "../DragHandle";
 
 interface TimeBlockProps extends TimeBlockInterface {
   handleDeleteTimeBlock: () => void;
@@ -31,15 +33,17 @@ const TimeBlock = ({
     <Card>
       <CardHeader display="flex" justifyContent="space-between">
         <Flex direction="column" gap={2}>
-          <Heading size="md" noOfLines={1}>
-            <Editable defaultValue={title}>
-              <EditablePreview />
-              <EditableInput />
-            </Editable>
-          </Heading>
+          <Flex align="center">
+            <Heading size="md" noOfLines={1}>
+              <Editable defaultValue={title}>
+                <EditablePreview />
+                <EditableInput />
+              </Editable>
+            </Heading>
+          </Flex>
           <Text>Start at: {startTime}</Text>
         </Flex>
-        <DeleteConfirmationButton handleDelete={handleDeleteTimeBlock} />
+        <DragHandle />
       </CardHeader>
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
@@ -64,6 +68,9 @@ const TimeBlock = ({
           </Box>
         </Stack>
       </CardBody>
+      <CardFooter display="flex" justifyContent="flex-end">
+        <DeleteConfirmationButton handleDelete={handleDeleteTimeBlock} />
+      </CardFooter>
     </Card>
   );
 };

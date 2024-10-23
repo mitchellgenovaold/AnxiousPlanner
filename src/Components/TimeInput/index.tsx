@@ -1,5 +1,5 @@
 import { Editable, EditableInput } from "@chakra-ui/react";
-import { convertTo12HourFormat } from "../../utils/helper";
+import { convertTo12HourFormat } from "../../utils/helpers";
 import CustomEditablePreview from "./CustomEditablePreview";
 
 interface TimeInputProps {

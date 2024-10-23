@@ -1,3 +1,4 @@
+import { UniqueIdentifier } from "@dnd-kit/core";
 import { useState } from "react";
 
 const useTimeBlocks = () => {
@@ -10,9 +11,11 @@ const useTimeBlocks = () => {
       minutes: 10,
     },
   ]);
-  const [activeCreateId, setActiveCreateId] = useState<number | null>(null);
+  const [activeCreateId, setActiveCreateId] = useState<UniqueIdentifier | null>(
+    null
+  );
 
-  const handleAddTimeBlock = (createId: number) => {
+  const handleAddTimeBlock = (createId: UniqueIdentifier) => {
     setActiveCreateId(createId);
   };
 
@@ -55,7 +58,7 @@ const useTimeBlocks = () => {
 
   const isCreatingTimeBlock = !!activeCreateId;
 
-  const getIsActiveTimeBlockCreation = (id: number) => {
+  const getIsActiveTimeBlockCreation = (id: UniqueIdentifier) => {
     return activeCreateId === id;
   };
 
@@ -67,6 +70,7 @@ const useTimeBlocks = () => {
     handleDeleteTimeBlock,
     isCreatingTimeBlock,
     getIsActiveTimeBlockCreation,
+    setTimeBlocks,
   };
 };
 
