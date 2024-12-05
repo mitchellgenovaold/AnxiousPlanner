@@ -1,16 +1,24 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
-import { useState } from "react";
+import { useReducer, useState } from "react";
+import timeBlockReducer from "../utils/timeBlockReducer/timeBlockReducer";
+import { TimeBlockInterface } from "../types";
+
+const initialTimeBlocks: Omit<TimeBlockInterface, "startTime">[] = [
+  {
+    id: Date.now(),
+    title: "Shower",
+    description: "Do the shower",
+    hours: 0,
+    minutes: 10,
+  },
+];
 
 const useTimeBlocks = () => {
-  const [timeBlocks, setTimeBlocks] = useState([
-    {
-      id: Date.now(),
-      title: "Shower",
-      description: "Do the shower",
-      hours: 0,
-      minutes: 10,
-    },
-  ]);
+  const [timeBlocks, dispatch] = useReducer(
+    timeBlockReducer,
+    initialTimeBlocks
+  );
+
   const [activeCreateId, setActiveCreateId] = useState<UniqueIdentifier | null>(
     null
   );
@@ -32,17 +40,10 @@ const useTimeBlocks = () => {
       minutes: formData.get("minutes") as unknown as number,
     };
 
-    setTimeBlocks((prevTimeBlocks) => {
-      const newTimeBlocks = [...prevTimeBlocks];
-      const timeBlockToPlaceAfterIndex = prevTimeBlocks.findIndex(
-        (timeBlock) => timeBlock.id === activeCreateId
-      );
-
-      if (timeBlockToPlaceAfterIndex !== -1) {
-        newTimeBlocks.splice(timeBlockToPlaceAfterIndex + 1, 0, newTimeBlock);
-      }
-
-      return newTimeBlocks;
+    dispatch({
+      type: "added",
+      timeBlock: newTimeBlock,
+      activeCreateId: activeCreateId!,
     });
 
     setActiveCreateId(null);
@@ -53,13 +54,23 @@ const useTimeBlocks = () => {
   };
 
   const handleDeleteTimeBlock = (index: number) => {
-    setTimeBlocks((prev) => prev.filter((_, i) => i !== index));
+    dispatch({
+      type: "deleted",
+      index,
+    });
   };
 
   const isCreatingTimeBlock = !!activeCreateId;
 
   const getIsActiveTimeBlockCreation = (id: UniqueIdentifier) => {
     return activeCreateId === id;
+  };
+
+  const setTimeBlocks = (newTimeBlocks: TimeBlockInterface[]) => {
+    dispatch({
+      type: "set-timeBlocks",
+      newTimeBlocks,
+    });
   };
 
   return {

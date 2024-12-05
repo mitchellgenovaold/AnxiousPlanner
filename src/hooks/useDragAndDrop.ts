@@ -1,11 +1,11 @@
 import { DragEndEvent, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import React, { useState } from "react";
+import { useState } from "react";
 import { DraggableItem } from "../types";
 
 interface UseDragAndDropProps<T> {
   items: T[];
-  setItems: React.Dispatch<React.SetStateAction<T[]>>;
+  setItems: (items: T[]) => void;
 }
 
 const useDragAndDrop = <T extends DraggableItem>({
@@ -33,7 +33,7 @@ const useDragAndDrop = <T extends DraggableItem>({
     if (over) {
       const overIndex = getIndex(over.id);
       if (activeIndex !== overIndex) {
-        setItems((items) => arrayMove(items, activeIndex, overIndex));
+        setItems(arrayMove(items, activeIndex, overIndex));
       }
     }
   };

@@ -14,7 +14,7 @@ import TimeBlock from "./Components/TimeBlock";
 import CreateTimeBlock from "./Components/TimeBlock/CreateTimeBlock";
 import TimeInput from "./Components/TimeInput";
 import useTimeBlocks from "./hooks/useTimeBlocks";
-import useEndTime from "./hooks/useEndTime";
+import useEndTime from "./hooks/useEndTime/useEndTime";
 import { DndContext } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -70,7 +70,12 @@ function App() {
         <Card width="100%">
           <CardBody display="flex" alignItems="center">
             <span>Time to be at the place:</span>
-            <TimeInput time={endTime} handleTimeChange={handleEndTimeChange} />
+            <TimeInput
+              time={endTime}
+              handleTimeChange={(event) =>
+                handleEndTimeChange(event.target.value)
+              }
+            />
           </CardBody>
         </Card>
         <SimpleGrid columns={1} spacing={2} width="100%">
@@ -109,11 +114,20 @@ function App() {
             </SortableContext>
           </DndContext>
         </SimpleGrid>
+        {getIsActiveTimeBlockCreation("firstTimeBlock") && (
+          <form onSubmit={handleCreateTimeBlock}>
+            <CreateTimeBlock handleCancel={handleCancelCreate} />
+          </form>
+        )}
         {!isCreatingTimeBlock && (
           <Button
             colorScheme="green"
             onClick={() =>
-              handleAddTimeBlock(timeBlocks[timeBlocks.length - 1].id)
+              handleAddTimeBlock(
+                timeBlocks.length
+                  ? timeBlocks[timeBlocks.length - 1].id
+                  : "firstTimeBlock"
+              )
             }
           >
             Add TimeBlock
