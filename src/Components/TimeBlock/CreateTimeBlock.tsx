@@ -1,18 +1,11 @@
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  FormControl,
-  FormLabel,
-  HStack,
-  Input,
-  NumberInput,
-  NumberInputField,
-  Stack,
-  Textarea,
-} from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react/button";
+import { ButtonGroup } from "@chakra-ui/react/button";
+import { Card, CardBody, CardFooter } from "@chakra-ui/react/card";
+import { FormControl, FormLabel } from "@chakra-ui/react/form-control";
+import { HStack, Stack } from "@chakra-ui/react/stack";
+import { Input } from "@chakra-ui/react/input";
+import { NumberInput, NumberInputField } from "@chakra-ui/react/number-input";
+import { Textarea } from "@chakra-ui/react/textarea";
 
 interface CreateTimeBlockProps {
   handleCancel: () => void;

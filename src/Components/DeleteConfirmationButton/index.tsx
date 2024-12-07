@@ -1,3 +1,4 @@
+import { useDisclosure } from "@chakra-ui/hooks/use-disclosure";
 import {
   Popover,
   PopoverTrigger,
@@ -5,10 +6,8 @@ import {
   PopoverHeader,
   PopoverBody,
   PopoverArrow,
-  Button,
-  ButtonGroup,
-  useDisclosure,
-} from "@chakra-ui/react";
+} from "@chakra-ui/react/popover";
+import { Button, ButtonGroup } from "@chakra-ui/react/button";
 
 interface DeleteConfirmationButtonProps {
   handleDelete: () => void;

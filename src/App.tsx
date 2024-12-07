@@ -1,11 +1,8 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  ChakraProvider,
-  Flex,
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react/button";
+import { Card, CardBody } from "@chakra-ui/react/card";
+import { Provider as ChakraProvider } from "@chakra-ui/react/provider";
+import { Flex } from "@chakra-ui/react/flex";
+import { SimpleGrid } from "@chakra-ui/react/grid";
 import { useMemo } from "react";
 import theme from "../theme";
 import { calculateStartTimes } from "./utils/helpers";

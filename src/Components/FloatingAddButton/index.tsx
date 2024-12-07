@@ -1,5 +1,5 @@
-import { AddIcon } from "@chakra-ui/icons";
-import { IconButton } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons/Add";
+import { IconButton } from "@chakra-ui/react/button";
 
 interface FloatingAddButtonProps {
   handleAddTimeBlock: () => void;

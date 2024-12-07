@@ -1,18 +1,14 @@
+import { Box } from "@chakra-ui/react/box";
+import { Card, CardBody, CardFooter, CardHeader } from "@chakra-ui/react/card";
 import {
-  Box,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Editable,
   EditableInput,
   EditablePreview,
-  Flex,
-  Heading,
-  Stack,
-  StackDivider,
-  Text,
-} from "@chakra-ui/react";
+} from "@chakra-ui/react/editable";
+import { Flex } from "@chakra-ui/react/flex";
+import { Heading, Text } from "@chakra-ui/react/typography";
+import { Stack, StackDivider } from "@chakra-ui/react/stack";
+
 import { TimeBlockInterface } from "../../types";
 import DeleteConfirmationButton from "../DeleteConfirmationButton";
 import DragHandle from "../DragHandle";

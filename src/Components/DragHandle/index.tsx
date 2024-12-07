@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { SortableItemContext } from "../SortableItem";
-import { DragHandleIcon, IconButton } from "@chakra-ui/icons";
+import { IconButton } from "@chakra-ui/react/button";
+import { DragHandleIcon } from "@chakra-ui/icons/DragHandle";
 
 const DragHandle = () => {
   const { attributes, listeners, ref } = useContext(SortableItemContext);

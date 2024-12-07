@@ -1,9 +1,9 @@
+import { useColorModeValue } from "@chakra-ui/react/color-mode";
 import {
-  Box,
-  useColorModeValue,
-  useEditableContext,
   useEditableStyles,
-} from "@chakra-ui/react";
+  useEditableContext,
+} from "@chakra-ui/react/editable";
+import { Box } from "@chakra-ui/react/box";
 
 interface CustomEditablePreviewProps {
   valueToDisplay: string;

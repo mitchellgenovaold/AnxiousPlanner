@@ -1,4 +1,4 @@
-import { Editable, EditableInput } from "@chakra-ui/react";
+import { Editable, EditableInput } from "@chakra-ui/react/editable";
 import { convertTo12HourFormat } from "../../utils/helpers";
 import CustomEditablePreview from "./CustomEditablePreview";
 
