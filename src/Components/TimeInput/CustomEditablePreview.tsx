@@ -14,13 +14,14 @@ const CustomEditablePreview = ({
 }: CustomEditablePreviewProps) => {
   const { isEditing, getPreviewProps } = useEditableContext();
   const { preview: previewStyles } = useEditableStyles();
+  const boxBackground = useColorModeValue("gray.100", "gray.600");
   return (
     !isEditing && (
       // @ts-expect-error Not sure why it is mad that previewStyles are spread here. The type has way more styles than are actually here.
       <Box
         as="span"
         _hover={{
-          background: useColorModeValue("gray.100", "gray.600"),
+          background: boxBackground,
         }}
         {...previewStyles}
         {...getPreviewProps()}
