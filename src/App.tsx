@@ -38,6 +38,7 @@ function App() {
   } = useTimeBlocks();
 
   const { handleDragStart, handleDragEnd, handleDragCancel } = useDragAndDrop({
+    //@ts-expect-error Need to redo the types a bit
     items: timeBlocks,
     setItems: setTimeBlocks,
   });
