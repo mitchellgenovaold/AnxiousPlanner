@@ -60,6 +60,13 @@ const useTimeBlocks = () => {
     });
   };
 
+  const handleEditTimeBlock = (timeBlock: TimeBlockInterface) => {
+    dispatch({
+      type: "edited",
+      timeBlock,
+    });
+  };
+
   const isCreatingTimeBlock = !!activeCreateId;
 
   const getIsActiveTimeBlockCreation = (id: UniqueIdentifier) => {
@@ -77,6 +84,7 @@ const useTimeBlocks = () => {
     timeBlocks,
     handleAddTimeBlock,
     handleCreateTimeBlock,
+    handleEditTimeBlock,
     handleCancelCreate,
     handleDeleteTimeBlock,
     isCreatingTimeBlock,

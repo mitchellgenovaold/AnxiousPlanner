@@ -1,4 +1,4 @@
-import { Editable, EditableInput } from "@chakra-ui/react/editable";
+import { Editable } from "@chakra-ui/react/editable";
 import { convertTo12HourFormat } from "../../utils/helpers";
 import CustomEditablePreview from "./CustomEditablePreview";
 
@@ -9,10 +9,10 @@ interface TimeInputProps {
 
 const TimeInput = ({ time, handleTimeChange }: TimeInputProps) => {
   return (
-    <Editable value={time} isPreviewFocusable>
+    <Editable.Root value={time}>
       <CustomEditablePreview valueToDisplay={convertTo12HourFormat(time)} />
-      <EditableInput type="time" onChange={handleTimeChange} />
-    </Editable>
+      <Editable.Input type="time" onChange={handleTimeChange} />
+    </Editable.Root>
   );
 };
 

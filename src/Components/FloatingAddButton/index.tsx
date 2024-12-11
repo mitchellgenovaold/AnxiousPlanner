@@ -1,5 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons/Add";
-import { IconButton } from "@chakra-ui/react/button";
+import { Plus } from "lucide-react";
 
 interface FloatingAddButtonProps {
   handleAddTimeBlock: () => void;
@@ -7,9 +6,8 @@ interface FloatingAddButtonProps {
 
 const FloatingAddButton = ({ handleAddTimeBlock }: FloatingAddButtonProps) => {
   return (
-    <IconButton
-      icon={<AddIcon />}
-      size="sm"
+    <Plus
+      size={32}
       position="absolute"
       left="50%"
       transform="translateX(-50%)"
@@ -21,7 +19,6 @@ const FloatingAddButton = ({ handleAddTimeBlock }: FloatingAddButtonProps) => {
       _hover={{ opacity: 1 }}
       aria-label="Add TimeBlock"
       onClick={handleAddTimeBlock}
-      colorScheme="green"
     />
   );
 };

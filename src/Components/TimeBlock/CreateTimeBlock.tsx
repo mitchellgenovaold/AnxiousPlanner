@@ -1,10 +1,8 @@
+import { Field, Group, NumberInput } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react/button";
-import { ButtonGroup } from "@chakra-ui/react/button";
-import { Card, CardBody, CardFooter } from "@chakra-ui/react/card";
-import { FormControl, FormLabel } from "@chakra-ui/react/form-control";
-import { HStack, Stack } from "@chakra-ui/react/stack";
+import { Card } from "@chakra-ui/react/card";
 import { Input } from "@chakra-ui/react/input";
-import { NumberInput, NumberInputField } from "@chakra-ui/react/number-input";
+import { HStack, Stack } from "@chakra-ui/react/stack";
 import { Textarea } from "@chakra-ui/react/textarea";
 
 interface CreateTimeBlockProps {
@@ -13,44 +11,44 @@ interface CreateTimeBlockProps {
 
 const CreateTimeBlock = ({ handleCancel }: CreateTimeBlockProps) => {
   return (
-    <Card>
-      <CardBody>
-        <Stack spacing="4">
-          <FormControl isRequired>
-            <FormLabel>Title</FormLabel>
+    <Card.Root>
+      <Card.Body>
+        <Stack gap="4">
+          <Field.Root required>
+            <Field.Label>Title</Field.Label>
             <Input autoFocus name="title" placeholder="Take a shower" />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Description</FormLabel>
+          </Field.Root>
+          <Field.Root>
+            <Field.Label>Description</Field.Label>
             <Textarea
               name="description"
               placeholder="Scrub a dub dub in the shower"
             />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Choose duration</FormLabel>
-            <HStack spacing="4">
-              <NumberInput name="hours" min={0} max={24}>
-                <NumberInputField placeholder="Hours" />
-              </NumberInput>
-              <NumberInput name="minutes" min={0} max={59}>
-                <NumberInputField placeholder="Minutes" />
-              </NumberInput>
+          </Field.Root>
+          <Field.Root>
+            <Field.Label>Choose duration</Field.Label>
+            <HStack gap="4">
+              <NumberInput.Root name="hours" min={0} max={24}>
+                <NumberInput.Field placeholder="Hours" />
+              </NumberInput.Root>
+              <NumberInput.Root name="minutes" min={0} max={59}>
+                <NumberInput.Field placeholder="Minutes" />
+              </NumberInput.Root>
             </HStack>
-          </FormControl>
+          </Field.Root>
         </Stack>
-      </CardBody>
-      <CardFooter>
-        <ButtonGroup>
-          <Button colorScheme="green" type="submit">
+      </Card.Body>
+      <Card.Footer>
+        <Group attached>
+          <Button colorPalette="green" type="submit">
             Create
           </Button>
-          <Button colorScheme="blue" onClick={handleCancel}>
+          <Button colorPalette="blue" onClick={handleCancel}>
             Cancel
           </Button>
-        </ButtonGroup>
-      </CardFooter>
-    </Card>
+        </Group>
+      </Card.Footer>
+    </Card.Root>
   );
 };
 

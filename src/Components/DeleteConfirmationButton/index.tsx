@@ -1,13 +1,14 @@
-import { useDisclosure } from "@chakra-ui/hooks/use-disclosure";
 import {
-  Popover,
-  PopoverTrigger,
+  Button,
+  Group,
+  PopoverArrow,
+  PopoverBody,
   PopoverContent,
   PopoverHeader,
-  PopoverBody,
-  PopoverArrow,
-} from "@chakra-ui/react/popover";
-import { Button, ButtonGroup } from "@chakra-ui/react/button";
+  PopoverRoot,
+  PopoverTrigger,
+} from "@chakra-ui/react";
+import { useState } from "react";
 
 interface DeleteConfirmationButtonProps {
   handleDelete: () => void;
@@ -16,28 +17,36 @@ interface DeleteConfirmationButtonProps {
 const DeleteConfirmationButton = ({
   handleDelete,
 }: DeleteConfirmationButtonProps) => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [open, setOpen] = useState(false);
 
   return (
-    <Popover isOpen={isOpen} onClose={onClose} onOpen={onOpen}>
-      <PopoverTrigger>
-        <Button colorScheme="red">Delete</Button>
+    <PopoverRoot
+      open={open}
+      onOpenChange={(event) => setOpen(event.open)}
+      lazyMount
+    >
+      <PopoverTrigger asChild>
+        <Button colorPalette="red">Delete</Button>
       </PopoverTrigger>
       <PopoverContent>
         <PopoverArrow />
         <PopoverHeader>Are you sure you want to delete?</PopoverHeader>
         <PopoverBody>
-          <ButtonGroup>
-            <Button size="sm" colorScheme="red" onClick={handleDelete}>
+          <Group>
+            <Button size="sm" colorPalette="red" onClick={handleDelete}>
               Yes, Delete
             </Button>
-            <Button size="sm" colorScheme="blue" onClick={onClose}>
+            <Button
+              size="sm"
+              colorPalette="blue"
+              onClick={() => setOpen(false)}
+            >
               No, Cancel
             </Button>
-          </ButtonGroup>
+          </Group>
         </PopoverBody>
       </PopoverContent>
-    </Popover>
+    </PopoverRoot>
   );
 };
 

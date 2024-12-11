@@ -1,23 +1,15 @@
-import { ThemeConfig } from "@chakra-ui/theme";
-import { extendTheme } from "@chakra-ui/react/extend-theme";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
-const config: ThemeConfig = {
-  initialColorMode: "dark",
-  useSystemColorMode: false,
-};
-
-const theme = extendTheme({
-  config,
-  styles: {
-    global: {
-      "html, body, #root": {
-        height: "100%",
-      },
-      "#root": {
-        width: "100%",
-      },
+const config = defineConfig({
+  ...defaultConfig,
+  globalCss: {
+    "html, body, #root": {
+      height: "100%",
+    },
+    "#root": {
+      width: "100%",
     },
   },
 });
 
-export default theme;
+export const system = createSystem(config);

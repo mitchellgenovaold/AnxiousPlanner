@@ -7,6 +7,11 @@ type AddedAction = {
   timeBlock: Omit<TimeBlockInterface, "startTime">;
 };
 
+type EditedAction = {
+  type: "edited";
+  timeBlock: Omit<TimeBlockInterface, "startTime">;
+};
+
 type DeletedAction = {
   type: "deleted";
   index: number;
@@ -17,7 +22,7 @@ type SetTimeBlocksAction = {
   newTimeBlocks: Omit<TimeBlockInterface, "startTime">[];
 };
 
-type Action = AddedAction | DeletedAction | SetTimeBlocksAction;
+type Action = AddedAction | EditedAction | DeletedAction | SetTimeBlocksAction;
 
 const timeBlockReducer = (
   timeBlocks: Omit<TimeBlockInterface, "startTime">[],
@@ -36,6 +41,18 @@ const timeBlockReducer = (
           0,
           action.timeBlock
         );
+      }
+
+      return newTimeBlocks;
+    }
+    case "edited": {
+      const newTimeBlocks = [...timeBlocks];
+      const timeBlockToEditIndex = timeBlocks.findIndex(
+        (timeBlock) => timeBlock.id === action.timeBlock.id
+      );
+
+      if (timeBlockToEditIndex !== -1) {
+        newTimeBlocks[timeBlockToEditIndex] = action.timeBlock;
       }
 
       return newTimeBlocks;

@@ -1,48 +1,66 @@
 import { Box } from "@chakra-ui/react/box";
-import { Card, CardBody, CardFooter, CardHeader } from "@chakra-ui/react/card";
+import { Card } from "@chakra-ui/react/card";
 import {
-  Editable,
   EditableInput,
   EditablePreview,
+  EditableRoot,
 } from "@chakra-ui/react/editable";
 import { Flex } from "@chakra-ui/react/flex";
+import { Stack } from "@chakra-ui/react/stack";
 import { Heading, Text } from "@chakra-ui/react/typography";
-import { Stack, StackDivider } from "@chakra-ui/react/stack";
 
+import { Separator } from "@chakra-ui/react";
 import { TimeBlockInterface } from "../../types";
 import DeleteConfirmationButton from "../DeleteConfirmationButton";
 import DragHandle from "../DragHandle";
 
 interface TimeBlockProps extends TimeBlockInterface {
   handleDeleteTimeBlock: () => void;
+  handleEditTimeBlock: (timeBlock: TimeBlockInterface) => void;
 }
 
 const TimeBlock = ({
+  id,
   title,
   description,
   hours,
   minutes,
   startTime,
+  handleEditTimeBlock,
   handleDeleteTimeBlock,
 }: TimeBlockProps) => {
+  const onEditTimeBlock = (newTitle: string) => {
+    handleEditTimeBlock({
+      title: newTitle,
+      description,
+      hours,
+      minutes,
+      startTime,
+      id,
+    });
+  };
+
   return (
-    <Card>
-      <CardHeader display="flex" justifyContent="space-between">
+    <Card.Root>
+      <Card.Header display="flex" justifyContent="space-between">
         <Flex direction="column" gap={2}>
           <Flex align="center">
-            <Heading size="md" noOfLines={1}>
-              <Editable defaultValue={title}>
+            <Heading size="md" lineClamp={1}>
+              <EditableRoot
+                defaultValue={title}
+                onFocusOutside={(event) => console.log(event)}
+              >
                 <EditablePreview />
                 <EditableInput />
-              </Editable>
+              </EditableRoot>
             </Heading>
           </Flex>
           <Text>Start at: {startTime}</Text>
         </Flex>
         <DragHandle />
-      </CardHeader>
-      <CardBody>
-        <Stack divider={<StackDivider />} spacing="4">
+      </Card.Header>
+      <Card.Body>
+        <Stack separator={<Separator />} gap="4">
           {description && (
             <Box>
               <Heading size="xs" textTransform="uppercase">
@@ -63,11 +81,11 @@ const TimeBlock = ({
             </Text>
           </Box>
         </Stack>
-      </CardBody>
-      <CardFooter display="flex" justifyContent="flex-end">
+      </Card.Body>
+      <Card.Footer display="flex" justifyContent="flex-end">
         <DeleteConfirmationButton handleDelete={handleDeleteTimeBlock} />
-      </CardFooter>
-    </Card>
+      </Card.Footer>
+    </Card.Root>
   );
 };
 

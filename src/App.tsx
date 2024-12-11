@@ -1,24 +1,23 @@
 import { Button } from "@chakra-ui/react/button";
-import { Card, CardBody } from "@chakra-ui/react/card";
-import { Provider as ChakraProvider } from "@chakra-ui/react/provider";
+import { Card } from "@chakra-ui/react/card";
 import { Flex } from "@chakra-ui/react/flex";
 import { SimpleGrid } from "@chakra-ui/react/grid";
-import { useMemo } from "react";
-import theme from "../theme";
-import { calculateStartTimes } from "./utils/helpers";
-import FloatingAddButton from "./Components/FloatingAddButton";
-import TimeBlock from "./Components/TimeBlock";
-import CreateTimeBlock from "./Components/TimeBlock/CreateTimeBlock";
-import TimeInput from "./Components/TimeInput";
-import useTimeBlocks from "./hooks/useTimeBlocks";
-import useEndTime from "./hooks/useEndTime/useEndTime";
 import { DndContext } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useMemo } from "react";
+import FloatingAddButton from "./Components/FloatingAddButton";
 import SortableItem from "./Components/SortableItem";
+import TimeBlock from "./Components/TimeBlock";
+import CreateTimeBlock from "./Components/TimeBlock/CreateTimeBlock";
+import TimeInput from "./Components/TimeInput";
+import { Provider } from "./Components/ui/provider";
 import useDragAndDrop from "./hooks/useDragAndDrop";
+import useEndTime from "./hooks/useEndTime/useEndTime";
+import useTimeBlocks from "./hooks/useTimeBlocks";
+import { calculateStartTimes } from "./utils/helpers";
 
 function App() {
   const { endTime, handleEndTimeChange } = useEndTime();
@@ -32,6 +31,7 @@ function App() {
     handleDeleteTimeBlock,
     getIsActiveTimeBlockCreation,
     setTimeBlocks,
+    handleEditTimeBlock,
   } = useTimeBlocks();
 
   const { handleDragStart, handleDragEnd, handleDragCancel } = useDragAndDrop({
@@ -53,7 +53,7 @@ function App() {
     isCreatingTimeBlock || formattedTimeBlocks.length <= 1;
 
   return (
-    <ChakraProvider theme={theme}>
+    <Provider>
       <Flex
         width="100%"
         height="100%"
@@ -65,8 +65,8 @@ function App() {
         marginLeft="auto"
         marginRight="auto"
       >
-        <Card width="100%">
-          <CardBody display="flex" alignItems="center">
+        <Card.Root width="100%">
+          <Card.Body display="flex" alignItems="center">
             <span>Time to be at the place:</span>
             <TimeInput
               time={endTime}
@@ -74,9 +74,9 @@ function App() {
                 handleEndTimeChange(event.target.value)
               }
             />
-          </CardBody>
-        </Card>
-        <SimpleGrid columns={1} spacing={2} width="100%">
+          </Card.Body>
+        </Card.Root>
+        <SimpleGrid columns={1} gap={2} width="100%">
           <DndContext
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
@@ -92,6 +92,7 @@ function App() {
                   <Flex gap={4} direction="column" position="relative">
                     <TimeBlock
                       handleDeleteTimeBlock={() => handleDeleteTimeBlock(index)}
+                      handleEditTimeBlock={handleEditTimeBlock}
                       {...timeBlock}
                     />
                     {!isCreatingTimeBlock && timeBlocks.length > 1 && (
@@ -119,7 +120,7 @@ function App() {
         )}
         {!isCreatingTimeBlock && (
           <Button
-            colorScheme="green"
+            colorPalette="green"
             onClick={() =>
               handleAddTimeBlock(
                 timeBlocks.length
@@ -132,7 +133,7 @@ function App() {
           </Button>
         )}
       </Flex>
-    </ChakraProvider>
+    </Provider>
   );
 }
 
